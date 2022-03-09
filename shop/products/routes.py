@@ -42,7 +42,19 @@ def deletebrand(id):
       cur = mysql.connection.cursor()
       cur.execute("SELECT * FROM Brands WHERE Brand_Id = %s", [id])
       deletebrand = cur.fetchone()
+      relatedproducts = cur.execute("SELECT Product_Id FROM Products WHERE Brand_Id = %s", [id])
       if request.method=="POST":
+            if relatedproducts > 0:
+                  datarelprod = cur.fetchall()
+                  for x in datarelprod:
+                        cur.execute("SELECT Image_1, Image_2, Image_3 FROM Products WHERE Product_Id = %s", [x[0]])
+                        res = cur.fetchone()
+                        img_1 = res[0]
+                        img_2 = res[1]
+                        img_3 = res[2]
+                        os.unlink(os.path.join(current_app.root_path, "static/images/" + img_1))
+                        os.unlink(os.path.join(current_app.root_path, "static/images/" + img_2))
+                        os.unlink(os.path.join(current_app.root_path, "static/images/" + img_3))
             cur.execute("DELETE FROM Brands WHERE Brand_Id = %s", [id])
             mysql.connection.commit()
             flash(f'The brand "{deletebrand[1]}" has been deleted', 'success')
@@ -89,7 +101,19 @@ def deletecategory(id):
       cur = mysql.connection.cursor()
       cur.execute("SELECT * FROM Categories WHERE Cat_Id = %s", [id])
       deletecategory = cur.fetchone()
+      relatedproducts = cur.execute("SELECT Product_Id FROM Products WHERE Cat_Id = %s", [id])
       if request.method=="POST":
+            if relatedproducts > 0:
+                  datarelprod = cur.fetchall()
+                  for x in datarelprod:
+                        cur.execute("SELECT Image_1, Image_2, Image_3 FROM Products WHERE Product_Id = %s", [x[0]])
+                        res = cur.fetchone()
+                        img_1 = res[0]
+                        img_2 = res[1]
+                        img_3 = res[2]
+                        os.unlink(os.path.join(current_app.root_path, "static/images/" + img_1))
+                        os.unlink(os.path.join(current_app.root_path, "static/images/" + img_2))
+                        os.unlink(os.path.join(current_app.root_path, "static/images/" + img_3))
             cur.execute("DELETE FROM Categories WHERE Cat_Id = %s", [id])
             mysql.connection.commit()
             flash(f'The category "{deletecategory[1]}" has been deleted', 'success')
