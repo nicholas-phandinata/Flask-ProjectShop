@@ -131,8 +131,7 @@ def addproduct():
 
             flash(f'The product {name} has been added to the database', 'success')
             return redirect(url_for('addproduct'))
-      return render_template('products/addproduct.html', title="Add Product Page", form=form, brands=brands,
-      categories=categories)
+      return render_template('products/addproduct.html', title="Add Product Page", form=form, brands=brands, categories=categories)
 
 @app.route('/updateproduct/<int:id>', methods=['GET','POST'])
 def updateproduct(id):
