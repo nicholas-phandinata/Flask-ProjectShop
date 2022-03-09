@@ -11,7 +11,7 @@ class RegistrationForm(Form):
 
 class LoginForm(Form):
         username = StringField('Username', [validators.DataRequired(), validators.Length(min=4, max=25)])
-        password = PasswordField('Password', [validators.DataRequired()])
+        password = PasswordField('Password', [validators.DataRequired()], id='pwd')
 
 class VerifyForm(Form):
         otp = IntegerField('OTP', [validators.DataRequired()])

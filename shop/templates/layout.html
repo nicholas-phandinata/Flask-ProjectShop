@@ -29,5 +29,38 @@
         }
       }
     </script>
+    <script>
+      // window.addEventListener("load", function(){
+      // var checkbox  = document.getElementById('check');
+      // var x = document.getElementById('pwd');
+      // checkbox.addEventListener('change', function() {
+      //     if(this.checked) {
+      //         x.type = 'text'; 
+      //     } else {
+      //         x.type = 'password'; 
+      //     }
+      //   });
+      // });
+      var x = document.getElementById('pwd');
+      var y = document.getElementById('hide1');
+      var z = document.getElementById('hide2');
+      y.style.display = 'none';
+      z.style.display = 'block';
+      
+      function hidePassword(){
+
+        if (x.type === 'password'){
+          x.type = 'text';
+          y.style.display = 'block';
+          z.style.display = 'none';
+        }
+
+        else {
+          x.type = 'password';
+          y.style.display = 'none';
+          z.style.display = 'block';
+        }
+      }
+      </script>
   </body>
 </html>

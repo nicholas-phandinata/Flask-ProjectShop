@@ -13,7 +13,12 @@
             <div>
                   {{ render_field(form.username, class="form-control") }}
                   {{ render_field(form.password, class="form-control") }}
+                  <span class ="eye"  style="float: right;" onclick="hidePassword()">
+                        <i id="hide1" class="fa fa-eye"></i>
+                        <i id="hide2" class="fa fa-eye-slash"></i>
+                  </span>
             </div>
+            <br>
             <p><input type=submit value="Login" class="btn btn-info mt-2"></p>
       </form>
             </div>
