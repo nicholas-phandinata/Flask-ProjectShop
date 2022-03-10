@@ -3,6 +3,32 @@ from shop import app, mysql, photos
 from .forms import Addproducts
 import secrets, os
 
+@app.route('/')
+def home():
+      cur = mysql.connection.cursor()
+      cur.execute("SELECT * FROM Products WHERE Stock > 0")
+      displayProducts =  list(cur.fetchall())
+      for i, x in enumerate(displayProducts):
+            displayProducts[i] = list(displayProducts[i])
+            rupiah = "{:,.2f}".format(x[2])
+            displayProducts[i][2] = rupiah
+      cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
+      displayBrands = cur.fetchall()
+      return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands)
+
+@app.route('/brand/<int:id>')
+def get_brand(id):
+      cur = mysql.connection.cursor()
+      cur.execute("SELECT * FROM Products WHERE Brand_Id = %s", [id])
+      displayProductsByBrand = list(cur.fetchall())
+      for i, x in enumerate(displayProductsByBrand):
+            displayProductsByBrand[i] = list(displayProductsByBrand[i])
+            rupiah = "{:,.2f}".format(x[2])
+            displayProductsByBrand[i][2] = rupiah
+      cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
+      displayBrands = cur.fetchall()
+      return render_template('products/index.html', displayProductsByBrand=displayProductsByBrand, displayBrands=displayBrands)
+
 @app.route('/addbrand', methods=['GET', 'POST'])
 def addbrand():
       if 'username' not in session:

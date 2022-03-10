@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% include '_messages.html' %}
+<div class="container">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Home</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">All Products</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Brands
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% for displayBrand in displayBrands%}
+              <a class="dropdown-item" href="{{url_for('get_brand', id=displayBrand[0])}}">{{displayBrand[1]}}</a>
+              {% endfor %}
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+</div>
+
+<div class="container">
+      <div class="row">
+      {% if displayProductsByBrand %}
+      {% for displayProductByBrand in displayProductsByBrand %}
+      <div class="col-md-3 mt-3">
+            <div class="card">
+                  <img src="{{url_for('static', filename='images/' + displayProductByBrand[10])}}" alt="{{displayProductByBrand[1]}}" class="card-img-top" height="150">
+                  <div class="card-body">
+                        {% if displayProductByBrand[3] > 0 %}
+                        <h5 style="text-shadow: 1px 1px 2px #000; color: red; transform: rotate(-15deg); position: absolute; top: -1%;
+                        left: -7%;">Discount {{displayProductByBrand[3]}}%</h5>
+                        {% endif %}
+                        <br>
+                        <h5 class="text-center">{{displayProductByBrand[1]}}</h5>
+                        <p class="text-center">Rp {{displayProductByBrand[2]}}</p>
+                  </div>
+                  <div class="card-footer">
+                        <a href="#" class="float-left btn btn-sm btn-primary">details</a>
+                        <a href="#" class="float-right btn btn-sm btn-warning">Add to cart</a>
+                  </div>
+            </div>
+      </div>
+      {% endfor %}
+      {% else %}
+            {% for displayProduct in displayProducts %}
+            <div class="col-md-3 mt-3">
+                  <div class="card">
+                        <img src="{{url_for('static', filename='images/' + displayProduct[10])}}" alt="{{displayProduct[1]}}" class="card-img-top" height="150">
+                        <div class="card-body">
+                              {% if displayProduct[3] > 0 %}
+                              <h5 style="text-shadow: 1px 1px 2px #000; color: red; transform: rotate(-15deg); position: absolute; top: -1%;
+                              left: -7%;">Discount {{displayProduct[3]}}%</h5>
+                              {% endif %}
+                              <br>
+                              <h5 class="text-center">{{displayProduct[1]}}</h5>
+                              <p class="text-center">Rp {{displayProduct[2]}}</p>
+                        </div>
+                        <div class="card-footer">
+                              <a href="#" class="float-left btn btn-sm btn-primary">details</a>
+                              <a href="#" class="float-right btn btn-sm btn-warning">Add to cart</a>
+                        </div>
+                  </div>
+            </div>
+            {% endfor %}
+      {% endif %}
+      </div>
+</div>
+{% endblock content%}

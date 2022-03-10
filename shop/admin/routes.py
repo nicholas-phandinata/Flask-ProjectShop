@@ -3,10 +3,6 @@ from shop import app, mysql, bcrypt, mail, Message, otp
 from .form import RegistrationForm, LoginForm, VerifyForm
 from random import *
 
-@app.route('/')
-def home():
-    return redirect(url_for('login'))
-
 @app.route('/admin')
 def admin():
     if 'username' not in session:
