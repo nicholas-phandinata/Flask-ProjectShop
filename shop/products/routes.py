@@ -3,7 +3,7 @@ from shop import app, mysql, photos
 from .forms import Addproducts
 import secrets, os
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
       cur = mysql.connection.cursor()
       cur.execute("SELECT * FROM Products WHERE Stock > 0")
@@ -12,11 +12,26 @@ def home():
             displayProducts[i] = list(displayProducts[i])
             rupiah = "{:,.2f}".format(x[2])
             displayProducts[i][2] = rupiah
+
+      q = request.form.get('searchInput')
+      if q:
+            cur = mysql.connection.cursor()
+            q = "%" + q + "%"
+            cur.execute("SELECT * FROM Products WHERE Name LIKE %s", [q])
+            displayProducts =  list(cur.fetchall())
+            for i, x in enumerate(displayProducts):
+                  displayProducts[i] = list(displayProducts[i])
+                  rupiah = "{:,.2f}".format(x[2])
+                  displayProducts[i][2] = rupiah
+            cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
+            displayBrands = cur.fetchall()
+            return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands)
+      
       cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
       displayBrands = cur.fetchall()
       return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands)
 
-@app.route('/brand/<int:id>')
+@app.route('/brand/<int:id>', methods=['GET', 'POST'])
 def get_brand(id):
       cur = mysql.connection.cursor()
       cur.execute("SELECT * FROM Products WHERE Brand_Id = %s", [id])
@@ -25,6 +40,21 @@ def get_brand(id):
             displayProductsByBrand[i] = list(displayProductsByBrand[i])
             rupiah = "{:,.2f}".format(x[2])
             displayProductsByBrand[i][2] = rupiah
+      
+      q = request.form.get('searchInput')
+      if q:
+            cur = mysql.connection.cursor()
+            q = "%" + q + "%"
+            cur.execute("SELECT * FROM Products WHERE Name LIKE %s", [q])
+            displayProducts =  list(cur.fetchall())
+            for i, x in enumerate(displayProducts):
+                  displayProducts[i] = list(displayProducts[i])
+                  rupiah = "{:,.2f}".format(x[2])
+                  displayProducts[i][2] = rupiah
+            cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
+            displayBrands = cur.fetchall()
+            return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands)
+
       cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
       displayBrands = cur.fetchall()
       return render_template('products/index.html', displayProductsByBrand=displayProductsByBrand, displayBrands=displayBrands)
