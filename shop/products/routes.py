@@ -244,3 +244,16 @@ def updateproduct(id):
       form.colors.data = updateproduct[5]
       form.description.data = updateproduct[6]
       return render_template('products/updateproduct.html', form=form, brands=brands, categories=categories, updateproduct=updateproduct)
+
+@app.route('/deleteproduct/<int:id>', methods=['POST'])
+def deleteproduct(id):
+      cur = mysql.connection.cursor()
+      cur.execute("SELECT Image_1, Image_2, Image_3, Name FROM Products WHERE Product_Id = %s", [id])
+      res = cur.fetchone()
+      os.unlink(os.path.join(current_app.root_path, "static/images/" + res[0]))
+      os.unlink(os.path.join(current_app.root_path, "static/images/" + res[1]))
+      os.unlink(os.path.join(current_app.root_path, "static/images/" + res[2]))
+      cur.execute("DELETE FROM Products WHERE Product_Id = %s", [id])
+      mysql.connection.commit()
+      flash(f'The product "{res[3]}" has been successfully deleted', 'success')
+      return redirect(url_for('admin'))
