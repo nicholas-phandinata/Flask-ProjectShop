@@ -14,6 +14,7 @@
           <li class="nav-item">
             <a class="nav-link" href="/">All Products</a>
           </li>
+
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Brands
@@ -24,6 +25,18 @@
               {% endfor %}
             </div>
           </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Categories
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% for displayCategory in displayCategories%}
+              <a class="dropdown-item" href="{{url_for('get_category', id=displayCategory[0])}}">{{displayCategory[1]}}</a>
+              {% endfor %}
+            </div>
+          </li>
+
           <li class="nav-item">
             <a class="nav-link disabled" href="#">Disabled</a>
           </li>
@@ -40,7 +53,9 @@
 <div class="container">
       <div class="row">
       {% if searchNotFound %}
-      <img src="{{url_for('static', filename='images/no-results.png')}}" alt="Search not found" style="display:block; margin-left: auto; margin-right: auto; margin-top: 10%;" width="50%">
+      <img src="{{url_for('static', filename='images/no-results.png')}}" alt="Search not found" 
+      style="display:block; margin-left: auto; margin-right: auto; margin-top: 10%;" width="50%">
+
       {% elif displayProductsByBrand %}
       {% for displayProductByBrand in displayProductsByBrand %}
       <div class="col-md-3 mt-3">
@@ -62,6 +77,29 @@
             </div>
       </div>
       {% endfor %}
+
+      {% elif displayProductsByCategory %}
+      {% for displayProductByCategory in displayProductsByCategory %}
+      <div class="col-md-3 mt-3">
+            <div class="card">
+                  <img src="{{url_for('static', filename='images/' + displayProductByCategory[10])}}" alt="{{displayProductByCategory[1]}}" class="card-img-top" height="150">
+                  <div class="card-body">
+                        {% if displayProductByCategory[3] > 0 %}
+                        <h5 style="text-shadow: 1px 1px 2px #000; color: red; transform: rotate(-15deg); position: absolute; top: -1%;
+                        left: -7%;">Discount {{displayProductByCategory[3]}}%</h5>
+                        {% endif %}
+                        <br>
+                        <h5 class="text-center">{{displayProductByCategory[1]}}</h5>
+                        <p class="text-center">Rp {{displayProductByCategory[2]}}</p>
+                  </div>
+                  <div class="card-footer">
+                        <a href="#" class="float-left btn btn-sm btn-primary">details</a>
+                        <a href="#" class="float-right btn btn-sm btn-warning">Add to cart</a>
+                  </div>
+            </div>
+      </div>
+      {% endfor %}
+
       {% else %}
             {% for displayProduct in displayProducts %}
             <div class="col-md-3 mt-3">

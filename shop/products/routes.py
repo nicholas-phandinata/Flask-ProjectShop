@@ -21,18 +21,29 @@ def home():
             displayProducts =  list(cur.fetchall())
             if not displayProducts:
                   searchNotFound = "sn"
-                  return render_template('products/index.html', searchNotFound=searchNotFound, q=q)
+                  cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
+                  displayBrands = cur.fetchall()
+
+                  cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
+                  displayCategories = cur.fetchall()
+                  return render_template('products/index.html', searchNotFound=searchNotFound, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
             for i, x in enumerate(displayProducts):
                   displayProducts[i] = list(displayProducts[i])
                   rupiah = "{:,.2f}".format(x[2])
                   displayProducts[i][2] = rupiah
             cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
             displayBrands = cur.fetchall()
-            return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands, q=q)
+
+            cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
+            displayCategories = cur.fetchall()
+            return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
       
       cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
       displayBrands = cur.fetchall()
-      return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands)
+
+      cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
+      displayCategories = cur.fetchall()
+      return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands, displayCategories=displayCategories)
 
 @app.route('/brand/<int:id>', methods=['GET', 'POST'])
 def get_brand(id):
@@ -52,18 +63,69 @@ def get_brand(id):
             displayProducts =  list(cur.fetchall())
             if not displayProducts:
                   searchNotFound = "sn"
-                  return render_template('products/index.html', searchNotFound=searchNotFound, q=q)
+                  cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
+                  displayBrands = cur.fetchall()
+
+                  cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
+                  displayCategories = cur.fetchall()
+                  return render_template('products/index.html', searchNotFound=searchNotFound, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
             for i, x in enumerate(displayProducts):
                   displayProducts[i] = list(displayProducts[i])
                   rupiah = "{:,.2f}".format(x[2])
                   displayProducts[i][2] = rupiah
             cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
             displayBrands = cur.fetchall()
-            return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands, q=q)
+
+            cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
+            displayCategories = cur.fetchall()
+            return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
 
       cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
       displayBrands = cur.fetchall()
-      return render_template('products/index.html', displayProductsByBrand=displayProductsByBrand, displayBrands=displayBrands)
+
+      cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
+      displayCategories = cur.fetchall()
+      return render_template('products/index.html', displayProductsByBrand=displayProductsByBrand, displayBrands=displayBrands, displayCategories=displayCategories)
+
+@app.route('/category/<int:id>', methods=['GET', 'POST'])
+def get_category(id):
+      cur = mysql.connection.cursor()
+      cur.execute("SELECT * FROM Products WHERE Cat_Id = %s", [id])
+      displayProductsByCategory = list(cur.fetchall())
+      for i, x in enumerate(displayProductsByCategory):
+            displayProductsByCategory[i] = list(displayProductsByCategory[i])
+            rupiah = "{:,.2f}".format(x[2])
+            displayProductsByCategory[i][2] = rupiah
+
+      q = request.form.get('searchInput')
+      if q:
+            cur = mysql.connection.cursor()
+            qs = "%" + q + "%"
+            cur.execute("SELECT * FROM Products WHERE Name LIKE %s", [qs])
+            displayProducts =  list(cur.fetchall())
+            if not displayProducts:
+                  searchNotFound = "sn"
+                  cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
+                  displayBrands = cur.fetchall()
+
+                  cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
+                  displayCategories = cur.fetchall()
+                  return render_template('products/index.html', searchNotFound=searchNotFound, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
+            for i, x in enumerate(displayProducts):
+                  displayProducts[i] = list(displayProducts[i])
+                  rupiah = "{:,.2f}".format(x[2])
+                  displayProducts[i][2] = rupiah
+            cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
+            displayBrands = cur.fetchall()
+            cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
+            displayCategories = cur.fetchall()
+            return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
+
+      cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
+      displayBrands = cur.fetchall()
+      cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
+      displayCategories = cur.fetchall()
+      return render_template('products/index.html', displayProductsByCategory=displayProductsByCategory, displayBrands=displayBrands, displayCategories=displayCategories)
 
 @app.route('/addbrand', methods=['GET', 'POST'])
 def addbrand():
