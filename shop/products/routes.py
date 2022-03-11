@@ -16,8 +16,8 @@ def home():
       q = request.form.get('searchInput')
       if q:
             cur = mysql.connection.cursor()
-            q = "%" + q + "%"
-            cur.execute("SELECT * FROM Products WHERE Name LIKE %s", [q])
+            qs = "%" + q + "%"
+            cur.execute("SELECT * FROM Products WHERE Name LIKE %s", [qs])
             displayProducts =  list(cur.fetchall())
             for i, x in enumerate(displayProducts):
                   displayProducts[i] = list(displayProducts[i])
@@ -25,7 +25,7 @@ def home():
                   displayProducts[i][2] = rupiah
             cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
             displayBrands = cur.fetchall()
-            return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands)
+            return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands, q=q)
       
       cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
       displayBrands = cur.fetchall()
@@ -44,8 +44,8 @@ def get_brand(id):
       q = request.form.get('searchInput')
       if q:
             cur = mysql.connection.cursor()
-            q = "%" + q + "%"
-            cur.execute("SELECT * FROM Products WHERE Name LIKE %s", [q])
+            qs = "%" + q + "%"
+            cur.execute("SELECT * FROM Products WHERE Name LIKE %s", [qs])
             displayProducts =  list(cur.fetchall())
             for i, x in enumerate(displayProducts):
                   displayProducts[i] = list(displayProducts[i])
@@ -53,7 +53,7 @@ def get_brand(id):
                   displayProducts[i][2] = rupiah
             cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
             displayBrands = cur.fetchall()
-            return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands)
+            return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands, q=q)
 
       cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
       displayBrands = cur.fetchall()

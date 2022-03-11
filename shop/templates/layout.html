@@ -63,12 +63,18 @@
       }
       </script>
           <script>
-            function searchProduct(){
-                // Selecting the input element and get its value 
-                var inputVal = document.getElementById("searchInput").value;
+            // function searchProduct(){
+            //     // Selecting the input element and get its value 
+            //     var inputVal = document.getElementById("searchInput").value;
                 
-                // Displaying the value
-                window.location.assign("http://www.w3schools.com");
+            //     // Displaying the value
+            //     window.location.assign("http://www.w3schools.com");
+            // }
+            var searchInput = document.getElementById("search-bar")
+            searchInput.oninput = function(){
+            // put your logic for search filter here
+            // alert(searchInput.value)
+            document.getElementById('sch').submit();
             }
         </script>
   </body>
