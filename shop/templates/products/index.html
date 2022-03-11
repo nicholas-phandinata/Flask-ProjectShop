@@ -39,7 +39,9 @@
 
 <div class="container">
       <div class="row">
-      {% if displayProductsByBrand %}
+      {% if searchNotFound %}
+      <img src="{{url_for('static', filename='images/no-results.png')}}" alt="Search not found" style="display:block; margin-left: auto; margin-right: auto; margin-top: 10%;" width="50%">
+      {% elif displayProductsByBrand %}
       {% for displayProductByBrand in displayProductsByBrand %}
       <div class="col-md-3 mt-3">
             <div class="card">

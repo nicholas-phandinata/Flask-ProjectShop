@@ -19,6 +19,9 @@ def home():
             qs = "%" + q + "%"
             cur.execute("SELECT * FROM Products WHERE Name LIKE %s", [qs])
             displayProducts =  list(cur.fetchall())
+            if not displayProducts:
+                  searchNotFound = "sn"
+                  return render_template('products/index.html', searchNotFound=searchNotFound, q=q)
             for i, x in enumerate(displayProducts):
                   displayProducts[i] = list(displayProducts[i])
                   rupiah = "{:,.2f}".format(x[2])
@@ -47,6 +50,9 @@ def get_brand(id):
             qs = "%" + q + "%"
             cur.execute("SELECT * FROM Products WHERE Name LIKE %s", [qs])
             displayProducts =  list(cur.fetchall())
+            if not displayProducts:
+                  searchNotFound = "sn"
+                  return render_template('products/index.html', searchNotFound=searchNotFound, q=q)
             for i, x in enumerate(displayProducts):
                   displayProducts[i] = list(displayProducts[i])
                   rupiah = "{:,.2f}".format(x[2])
