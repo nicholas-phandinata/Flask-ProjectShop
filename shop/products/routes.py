@@ -102,7 +102,8 @@ def get_brand(id):
 
             cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
             displayCategories = cur.fetchall()
-            return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
+            searchFound = "sf"
+            return render_template('products/index.html', searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
 
       cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
       displayBrands = cur.fetchall()
@@ -153,7 +154,8 @@ def get_category(id):
             displayBrands = cur.fetchall()
             cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
             displayCategories = cur.fetchall()
-            return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
+            searchFound = "sf"
+            return render_template('products/index.html', searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
 
       cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
       displayBrands = cur.fetchall()
