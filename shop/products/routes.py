@@ -4,7 +4,7 @@ from shop import app, mysql, photos
 from .forms import Addproducts
 import secrets, os, math
 min_threshold = 1
-max_threshold = 5
+max_threshold = 7
 
 @app.route('/', defaults={'page':1}, methods=['GET', 'POST'])
 @app.route('/page/<int:page>', methods=['GET', 'POST'])
@@ -22,15 +22,21 @@ def home(page):
 
       global min_threshold, max_threshold
 
-      if current_page == max_threshold:
-            min_threshold += 3
-            max_threshold += 3
+      if current_page == max_threshold and current_page != total_page:
+            min_threshold += 5
+            max_threshold += 5
       elif current_page == min_threshold and current_page != 1:
-            min_threshold -= 3
-            max_threshold -=3
+            min_threshold -= 5
+            max_threshold -= 5
       elif current_page == 1:
             min_threshold = 1
-            max_threshold = 5
+            max_threshold = 7
+      elif current_page == total_page:
+            for x in range(7,10000,5):
+                  if current_page <= x:
+                        min_threshold = x - 6
+                        max_threshold = x
+                        break
 
       cur.execute("SELECT * FROM Products WHERE Stock > 0 LIMIT %s OFFSET %s", (limit,offset))
       displayProducts =  list(cur.fetchall())
