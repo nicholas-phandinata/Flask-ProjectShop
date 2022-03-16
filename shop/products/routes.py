@@ -9,7 +9,7 @@ max_threshold = 7
 @app.route('/', defaults={'page':1}, methods=['GET', 'POST'])
 @app.route('/page/<int:page>', methods=['GET', 'POST'])
 def home(page):
-      limit = 1
+      limit = 8
       offset = page*limit - limit
 
       cur = mysql.connection.cursor()
