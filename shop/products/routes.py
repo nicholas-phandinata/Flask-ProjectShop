@@ -145,6 +145,25 @@ def get_category(id):
       total_page = math.ceil(total_row / limit)
       next_page = page + 1
       prev_page = page - 1
+      current_page = page
+
+      global min_threshold, max_threshold
+
+      if current_page == max_threshold and current_page != total_page:
+            min_threshold += 5
+            max_threshold += 5
+      elif current_page == min_threshold and current_page != 1:
+            min_threshold -= 5
+            max_threshold -= 5
+      elif current_page == 1:
+            min_threshold = 1
+            max_threshold = 7
+      elif current_page == total_page:
+            for x in range(7,10000,5):
+                  if current_page <= x:
+                        min_threshold = x - 6
+                        max_threshold = x
+                        break
 
       cur.execute("SELECT * FROM Products WHERE Cat_Id = %s LIMIT %s OFFSET %s", (id,limit,offset))
       displayProductsByCategory = list(cur.fetchall())
@@ -182,7 +201,7 @@ def get_category(id):
       displayBrands = cur.fetchall()
       cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
       displayCategories = cur.fetchall()
-      return render_template('products/index.html', id=id, displayProductsByCategory=displayProductsByCategory, displayBrands=displayBrands, displayCategories=displayCategories, total_page=total_page, next_page=next_page, prev_page=prev_page)
+      return render_template('products/index.html', id=id, displayProductsByCategory=displayProductsByCategory, displayBrands=displayBrands, displayCategories=displayCategories, total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
 
 @app.route('/addbrand', methods=['GET', 'POST'])
 def addbrand():

@@ -137,22 +137,40 @@
       <br>
       <div class="row">
             <div class="col text-center">
-                  {% if prev_page >= 1%}
+                  {% if prev_page >= 1 and total_page > 7%}
+                  <a class="btn btn-info btn-sm mt-3" href="{{url_for('get_category', id=id, page=1)}}">First</a>
                   <a class="btn btn-outline-info btn-sm mt-3" href="{{url_for('get_category', id=id, page=prev_page)}}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Previous</span>
                   </a>
                   {% endif %}
 
-                  {% for page in range(total_page) %}
-                  <a class="btn btn-outline-info btn-sm mt-3" href="{{url_for('get_category', id=id, page=loop.index)}}">{{loop.index}}</a>
-                  {% endfor %}
+                  {% if total_page > 1 %}
+                  {% if max_threshold > total_page %}
+                   {% for page in range(min_threshold, total_page+1) %}
+                    {% if page == current_page %}
+                     <a class="btn btn-info btn-sm mt-3" href="{{url_for('get_category', id=id, page=page)}}">{{page}}</a>
+                    {% else %}
+                     <a class="btn btn-outline-info btn-sm mt-3" href="{{url_for('get_category', id=id, page=page)}}">{{page}}</a>
+                    {% endif %}
+                   {% endfor %}
+                  {% else %}
+                   {% for page in range(min_threshold, max_threshold+1) %}
+                    {% if page == current_page %}
+                     <a class="btn btn-info btn-sm mt-3" href="{{url_for('get_category', id=id, page=page)}}">{{page}}</a>
+                    {% else %}
+                     <a class="btn btn-outline-info btn-sm mt-3" href="{{url_for('get_category', id=id, page=page)}}">{{page}}</a>
+                    {% endif %}
+                   {% endfor %}
+                  {% endif %}
+                  {% endif %}
 
-                  {% if next_page <= total_page %} 
+                  {% if next_page <= total_page and total_page > 7%} 
                   <a class="btn btn-outline-info btn-sm mt-3" href="{{url_for('get_category', id=id, page=next_page)}}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Next {{next_page}}</span>
                   </a>
+                  <a class="btn btn-info btn-sm mt-3" href="{{url_for('get_category', id=id, page=total_page)}}">Last</a>
                   {% endif %}
             </div>
       </div>
