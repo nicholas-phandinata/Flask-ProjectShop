@@ -113,7 +113,7 @@
       <div class="row">
             {% elif displayProductsByCategory %}
             {% for displayProductByCategory in displayProductsByCategory %}
-            <div class="col-md-4 mt-3">
+            <div class="col-md-4 mt-3 mb-2">
                   <div class="card" style="height: 400px;">
                         <img src="{{url_for('static', filename='images/' + displayProductByCategory[10])}}"
                               alt="{{displayProductByCategory[1]}}" class="card-img-top" height="200">
@@ -133,7 +133,7 @@
             </div>
             {% endfor %}
       </div>
-      <br>
+
       <div class="row">
             <div class="col text-center">
                   {% if prev_page >= 1 and total_page > 7%}
@@ -177,7 +177,7 @@
       <div class="row">
             {% elif searchFound%}
             {% for displayProduct in displayProducts %}
-            <div class="col-md-4 mt-3">
+            <div class="col-md-4 mt-3 mb-2">
                   <div class="card" style="height: 400px;">
                         <img src="{{url_for('static', filename='images/' + displayProduct[10])}}"
                               alt="{{displayProduct[1]}}" class="card-img-top" height="200">
@@ -201,7 +201,7 @@
       <div class="row">
             {% else %}
             {% for displayProduct in displayProducts %}
-            <div class="col-md-4 mt-3">
+            <div class="col-md-4 mt-3 mb-2">
                   <div class="card" style="height: 400px;">
                         <img src="{{url_for('static', filename='images/' + displayProduct[10])}}"
                               alt="{{displayProduct[1]}}" class="card-img-top" height="200">
@@ -221,7 +221,7 @@
             </div>
             {% endfor %}
       </div>
-      <br>
+
       <div class="row">
             <div class="col text-center">
                   {% if prev_page >= 1 and total_page > 7%}
