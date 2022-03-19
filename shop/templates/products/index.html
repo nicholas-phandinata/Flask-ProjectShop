@@ -113,16 +113,15 @@
       <div class="row">
             {% elif displayProductsByCategory %}
             {% for displayProductByCategory in displayProductsByCategory %}
-            <div class="col-md-3 mt-3">
-                  <div class="card" style="height: 380px;">
+            <div class="col-md-4 mt-3">
+                  <div class="card" style="height: 400px;">
                         <img src="{{url_for('static', filename='images/' + displayProductByCategory[10])}}"
-                              alt="{{displayProductByCategory[1]}}" class="card-img-top" height="150">
+                              alt="{{displayProductByCategory[1]}}" class="card-img-top" height="200">
                         <div class="card-body">
                               {% if displayProductByCategory[3] > 0 %}
                               <h5 style="text-shadow: 1px 1px 2px #000; color: white; transform: rotate(-15deg); position: absolute; top: 1%;
                               left: -7%;"><span style="background-color: red;">Discount {{displayProductByCategory[3]}}%</span></h5>
                               {% endif %}
-                              <br>
                               <h5 class="text-center">{{displayProductByCategory[1]}}</h5>
                               <p class="text-center">Rp {{displayProductByCategory[2]}}</p>
                         </div>
