@@ -136,7 +136,7 @@ def get_brand(id):
 @app.route('/category/<int:id>', methods=['GET', 'POST'])
 def get_category(id):
       page = request.args.get('page', 1, type=int)
-      limit = 1
+      limit = 6
       offset = page*limit - limit
 
       cur = mysql.connection.cursor()
