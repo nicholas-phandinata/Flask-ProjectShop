@@ -87,7 +87,7 @@ def get_brand(id):
       offset = page*limit - limit
 
       cur = mysql.connection.cursor()
-      cur.execute("SELECT * FROM Products WHERE Brand_Id = %s", [id])
+      cur.execute("SELECT * FROM Products WHERE Brand_Id = %s AND Stock > 0", [id])
       total_row = cur.rowcount
       total_page = math.ceil(total_row / limit)
       next_page = page + 1
@@ -112,7 +112,7 @@ def get_brand(id):
                         max_threshold = x
                         break
 
-      cur.execute("SELECT * FROM Products WHERE Brand_Id = %s LIMIT %s OFFSET %s", (id,limit,offset))
+      cur.execute("SELECT * FROM Products WHERE Brand_Id = %s AND Stock > 0 LIMIT %s OFFSET %s", (id,limit,offset))
       displayProductsByBrand = list(cur.fetchall())
       for i, x in enumerate(displayProductsByBrand):
             displayProductsByBrand[i] = list(displayProductsByBrand[i])
@@ -123,7 +123,7 @@ def get_brand(id):
       if q:
             cur = mysql.connection.cursor()
             qs = "%" + q + "%"
-            cur.execute("SELECT * FROM Products WHERE Name LIKE %s", [qs])
+            cur.execute("SELECT * FROM Products WHERE Brand_Id = %s AND Name LIKE %s", (id, qs))
             displayProducts =  list(cur.fetchall())
             if not displayProducts:
                   searchNotFound = "sn"
@@ -159,7 +159,7 @@ def get_category(id):
       offset = page*limit - limit
 
       cur = mysql.connection.cursor()
-      cur.execute("SELECT * FROM Products WHERE Cat_Id = %s", [id])
+      cur.execute("SELECT * FROM Products WHERE Cat_Id = %s AND Stock > 0", [id])
       total_row = cur.rowcount
       total_page = math.ceil(total_row / limit)
       next_page = page + 1
@@ -184,7 +184,7 @@ def get_category(id):
                         max_threshold = x
                         break
 
-      cur.execute("SELECT * FROM Products WHERE Cat_Id = %s LIMIT %s OFFSET %s", (id,limit,offset))
+      cur.execute("SELECT * FROM Products WHERE Cat_Id = %s AND Stock > 0 LIMIT %s OFFSET %s", (id,limit,offset))
       displayProductsByCategory = list(cur.fetchall())
       for i, x in enumerate(displayProductsByCategory):
             displayProductsByCategory[i] = list(displayProductsByCategory[i])
@@ -195,7 +195,7 @@ def get_category(id):
       if q:
             cur = mysql.connection.cursor()
             qs = "%" + q + "%"
-            cur.execute("SELECT * FROM Products WHERE Name LIKE %s", [qs])
+            cur.execute("SELECT * FROM Products WHERE Cat_Id = %s AND Name LIKE %s", (id, qs))
             displayProducts =  list(cur.fetchall())
             if not displayProducts:
                   searchNotFound = "sn"

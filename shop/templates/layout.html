@@ -1,81 +1,84 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>{{title}}</title>
-  </head>
-  <body>
-{% block content %}
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-{% endblock content %}
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="{{ url_for('static', filename='js/jquery-3.2.1.slim.min.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/popper.min.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
-    <script>
-      // Get the modal
-      var modal = document.getElementById('flash_id01');
-      // When the user clicks anywhere outside of the modal, close it
-      window.onclick = function(event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-        }
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>{{title}}</title>
+</head>
+
+<body>
+  {% block content %}
+
+  {% endblock content %}
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="{{ url_for('static', filename='js/jquery-3.2.1.slim.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/popper.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+  <script>
+    // Get the modal
+    var modal = document.getElementById('flash_id01');
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
       }
-    </script>
-    <script>
-      // window.addEventListener("load", function(){
-      // var checkbox  = document.getElementById('check');
-      // var x = document.getElementById('pwd');
-      // checkbox.addEventListener('change', function() {
-      //     if(this.checked) {
-      //         x.type = 'text'; 
-      //     } else {
-      //         x.type = 'password'; 
-      //     }
-      //   });
-      // });
-      var x = document.getElementById('pwd');
-      var y = document.getElementById('hide1');
-      var z = document.getElementById('hide2');
-      y.style.display = 'none';
-      z.style.display = 'block';
-      
-      function hidePassword(){
+    }
+  </script>
+  <script>
+    // window.addEventListener("load", function(){
+    // var checkbox  = document.getElementById('check');
+    // var x = document.getElementById('pwd');
+    // checkbox.addEventListener('change', function() {
+    //     if(this.checked) {
+    //         x.type = 'text'; 
+    //     } else {
+    //         x.type = 'password'; 
+    //     }
+    //   });
+    // });
+    var x = document.getElementById('pwd');
+    var y = document.getElementById('hide1');
+    var z = document.getElementById('hide2');
+    y.style.display = 'none';
+    z.style.display = 'block';
 
-        if (x.type === 'password'){
-          x.type = 'text';
-          y.style.display = 'block';
-          z.style.display = 'none';
-        }
+    function hidePassword() {
 
-        else {
-          x.type = 'password';
-          y.style.display = 'none';
-          z.style.display = 'block';
-        }
+      if (x.type === 'password') {
+        x.type = 'text';
+        y.style.display = 'block';
+        z.style.display = 'none';
       }
-      </script>
-          <script>
-            // function searchProduct(){
-            //     // Selecting the input element and get its value 
-            //     var inputVal = document.getElementById("searchInput").value;
-                
-            //     // Displaying the value
-            //     window.location.assign("http://www.w3schools.com");
-            // }
-            var searchInput = document.getElementById("search-bar")
-            searchInput.oninput = function(){
-            // put your logic for search filter here
-            // alert(searchInput.value)
-            document.getElementById('sch').submit();
-            }
-        </script>
-  </body>
+
+      else {
+        x.type = 'password';
+        y.style.display = 'none';
+        z.style.display = 'block';
+      }
+    }
+  </script>
+  <script>
+    // function searchProduct(){
+    //     // Selecting the input element and get its value 
+    //     var inputVal = document.getElementById("searchInput").value;
+
+    //     // Displaying the value
+    //     window.location.assign("http://www.w3schools.com");
+    // }
+    var searchInput = document.getElementById("search-bar")
+    searchInput.oninput = function () {
+      // put your logic for search filter here
+      // alert(searchInput.value)
+      document.getElementById('sch').submit();
+    }
+  </script>
+</body>
+
 </html>
