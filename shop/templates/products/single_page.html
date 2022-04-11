@@ -44,7 +44,7 @@
                         </li>
 
                         <li class="nav-item">
-                              <a class="nav-link disabled" href="#">Disabled</a>
+                              <a class="nav-link disabled" href="#" tabindex="-1">Cart ({{session['Shoppingcart']|length}})</a>
                         </li>
                   </ul>
                   <form class="form-inline my-2 my-lg-0" method="POST" id="sch">
@@ -68,13 +68,29 @@
                   {% if product[3] > 0 %}
                   <p>Product Discount: {{product[3]}}%</p>
                   {% endif %}
+                  <hr>
                   <b>Product Description</b>
                   <p>{{product[6]}}</p>
-                  <a href="" class="btn btn-warning">Add to cart</a>
+                  <hr>
+                  <form action="{{url_for('AddCart')}}" method="post">
+                        <input type="hidden" name="product_id" value="{{product[0]}}">
+                        <button type="submit" class="btn btn-sm btn-warning">Add to Cart</button>
+                        <label for="quantity">Quantity: </label>
+                        <input type="number" name="quantity" value="1" min="1" max="{{product[4]}}">
+                        {% set colors = product[5].split(',') %}
+                        <label for="colors">Colors: </label>
+                        <select name="colors" id="colors">
+                            {% for color in colors %}
+                            {% set col = color.split(':') %}
+                            <option value="{{col[0]}}">{{col[0] | capitalize }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
             </div>
       </div>
       <div class="row">
             <div class="col-md-12 mt-3" id="s_image">
+                  <hr>
                   <img src="{{url_for('static', filename='images/' + product[10])}}" alt="{{product[1]}}" 
                   width="130" height="130" class="p-3">
                   <img src="{{url_for('static', filename='images/' + product[11])}}" alt="{{product[1]}}" 

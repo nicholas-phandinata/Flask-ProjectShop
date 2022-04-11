@@ -44,7 +44,7 @@
                         </li>
 
                         <li class="nav-item">
-                              <a class="nav-link disabled" href="#">Disabled</a>
+                              <a class="nav-link disabled" href="#" tabindex="-1">Cart ({{session['Shoppingcart']|length}})</a>
                         </li>
                   </ul>
                   <form class="form-inline my-2 my-lg-0" method="POST" id="sch">
@@ -80,7 +80,18 @@
                         </div>
                         <div class="card-footer">
                               <a href="{{url_for('single_page', id=displayProductByBrand[0])}}" class="float-left btn btn-sm btn-primary">details</a>
-                              <a href="#" class="float-right btn btn-sm btn-warning">Add to cart</a>
+                              <form action="{{url_for('AddCart')}}" method="post">
+                                    <input type="hidden" name="product_id" value="{{displayProductByBrand[0]}}">
+                                    <button type="submit" class="btn btn-sm btn-warning float-right">Add to Cart</button>
+                                    <input type="hidden" name="quantity" value="1" min="1" max="{{displayProductByBrand[4]}}">
+                                    {% set colors = displayProductByBrand[5].split(',') %}
+                                    <select name="colors" id="colors" style="visibility: hidden;">
+                                        {% for color in colors %}
+                                        {% set col = color.split(':') %}
+                                        <option value="{{col[0]}}">{{col[0] | capitalize }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
                         </div>
                   </div>
             </div>
@@ -144,7 +155,18 @@
                         </div>
                         <div class="card-footer">
                               <a href="{{url_for('single_page', id=displayProductByCategory[0])}}" class="float-left btn btn-sm btn-primary">details</a>
-                              <a href="#" class="float-right btn btn-sm btn-warning">Add to cart</a>
+                              <form action="{{url_for('AddCart')}}" method="post">
+                                    <input type="hidden" name="product_id" value="{{displayProductByCategory[0]}}">
+                                    <button type="submit" class="btn btn-sm btn-warning float-right">Add to Cart</button>
+                                    <input type="hidden" name="quantity" value="1" min="1" max="{{displayProductByCategory[4]}}">
+                                    {% set colors = displayProductByCategory[5].split(',') %}
+                                    <select name="colors" id="colors" style="visibility: hidden;">
+                                        {% for color in colors %}
+                                        {% set col = color.split(':') %}
+                                        <option value="{{col[0]}}">{{col[0] | capitalize }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
                         </div>
                   </div>
             </div>
@@ -208,7 +230,18 @@
                         </div>
                         <div class="card-footer">
                               <a href="{{url_for('single_page', id=displayProduct[0])}}" class="float-left btn btn-sm btn-primary">details</a>
-                              <a href="#" class="float-right btn btn-sm btn-warning">Add to cart</a>
+                              <form action="{{url_for('AddCart')}}" method="post">
+                                    <input type="hidden" name="product_id" value="{{displayProduct[0]}}">
+                                    <button type="submit" class="btn btn-sm btn-warning float-right">Add to Cart</button>
+                                    <input type="hidden" name="quantity" value="1" min="1" max="{{displayProduct[4]}}">
+                                    {% set colors = displayProduct[5].split(',') %}
+                                    <select name="colors" id="colors" style="visibility: hidden;">
+                                        {% for color in colors %}
+                                        {% set col = color.split(':') %}
+                                        <option value="{{col[0]}}">{{col[0] | capitalize }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
                         </div>
                   </div>
             </div>
@@ -232,7 +265,18 @@
                         </div>
                         <div class="card-footer">
                               <a href="{{url_for('single_page', id=displayProduct[0])}}" class="float-left btn btn-sm btn-primary">details</a>
-                              <a href="#" class="float-right btn btn-sm btn-warning">Add to cart</a>
+                              <form action="{{url_for('AddCart')}}" method="post">
+                                    <input type="hidden" name="product_id" value="{{displayProduct[0]}}">
+                                    <button type="submit" class="btn btn-sm btn-warning float-right">Add to Cart</button>
+                                    <input type="hidden" name="quantity" value="1" min="1" max="{{displayProduct[4]}}">
+                                    {% set colors = displayProduct[5].split(',') %}
+                                    <select name="colors" id="colors" style="visibility: hidden;">
+                                        {% for color in colors %}
+                                        {% set col = color.split(':') %}
+                                        <option value="{{col[0]}}">{{col[0] | capitalize }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
                         </div>
                   </div>
             </div>
