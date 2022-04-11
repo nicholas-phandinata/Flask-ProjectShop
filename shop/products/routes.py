@@ -80,6 +80,22 @@ def home(page):
       displayCategories = cur.fetchall()
       return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands, displayCategories=displayCategories, total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
 
+@app.route('/product/<int:id>')
+def single_page(id):
+      cur = mysql.connection.cursor()
+      cur.execute("SELECT * FROM Products WHERE Product_Id = %s", [id])
+      product = list(cur.fetchone())
+      rupiah = "{:,.2f}".format(product[2])
+      product[2] = rupiah
+
+      cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
+      displayBrands = cur.fetchall()
+
+      cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
+      displayCategories = cur.fetchall()
+
+      return render_template('products/single_page.html', product=product, displayBrands=displayBrands, displayCategories=displayCategories)
+
 @app.route('/brand/<int:id>', methods=['GET', 'POST'])
 def get_brand(id):
       page = request.args.get('page', 1, type=int)
