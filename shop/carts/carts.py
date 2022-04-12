@@ -17,7 +17,7 @@ def AddCart():
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM Products WHERE Product_Id = %s", [product_id])
         product = list(cur.fetchone())
-        rupiah = "{:,.2f}".format(product[2])
+        rupiah = float(product[2])
         product[2] = rupiah
 
         if product_id and quantity and color and request.method == "POST":
@@ -40,3 +40,10 @@ def AddCart():
         print(e)
     finally:
         return redirect(request.referrer)
+
+@app.route('/carts')
+def getCart():
+    if 'Shoppingcart' not in session:
+        return redirect(request.referrer)
+    else:
+        return render_template('products/carts.html')
