@@ -45,5 +45,10 @@ def AddCart():
 def getCart():
     if 'Shoppingcart' not in session:
         return redirect(request.referrer)
-    else:
-        return render_template('products/carts.html')
+    subtotal = 0
+    for key, product in session['Shoppingcart'].items():
+        discount = (product['discount']/100) * float(product['price'])
+        subtotal += float(product['price']) * int(product['quantity'])
+        subtotal -= discount
+    grandtotal = "{:,.2f}".format(subtotal)
+    return render_template('products/carts.html', grandtotal=grandtotal)
