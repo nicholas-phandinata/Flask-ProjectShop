@@ -7,6 +7,7 @@
                   <table class="table table-sm">
                         <thead>
                               <th>Sr</th>
+                              <th>Image</th>
                               <th>Name</th>
                               <th>Color</th>
                               <th>Price</th>
@@ -14,7 +15,7 @@
                               <th>Subtotal</th>
                               <th>Discount</th>
                               <th>Total</th>
-                              <th>Update</th>
+                              <!-- <th>Update</th> -->
                               <th>Remove</th>
                         </thead>
                         <tbody>
@@ -23,28 +24,46 @@
                               {% set subtotal = product.quantity|int * product.price|float %}
                               <tr>
                                     <td>{{loop.index}}</td>
+                                    <td><img src="{{url_for('static',filename='images/'+ product.image)}}"
+                                                alt="{{product.name}}" width="50" height="45"></td>
                                     <td>{{product.name}}</td>
-                                    <td>{{product.color}}</td>
-                                    <td>Rp {{"{:,.2f}".format(product.price)}}</td>
-                                    <td>{{product.quantity}}</td>
-                                    <td>Rp {{"{:,.2f}".format(subtotal)}}</td>
-                                    {% if product.discount > 0 %}
-                                    <td>{{product.discount}}%</td>
-                                    {% else %}
-                                    <td></td>
-                                    {% endif %}
-                                    <td>Rp {{"{:,.2f}".format(subtotal - discount|round(1,'floor')) }}</td>
-                                    <td><a href="">Update</a></td>
+                                    <form action="{{url_for('UpdateCart', code=key)}}" method="post" id="updateCart">
+                                          <td>
+                                                {% set colors = product.colors.split(',') %}
+                                                <label for="colors">Colors: </label>
+                                                <select name="color" id="color" onchange="this.form.submit()">
+                                                      <option value="{{product.color}}">{{product.color}}</option>
+                                                      {% for color in colors %}
+                                                      {% if color != product.color %}
+                                                      <option value="{{color}}">{{color}}</option>
+                                                      {% endif %}
+                                                      {% endfor %}
+                                                </select>
+                                          </td>
+                                          <td>Rp {{"{:,.2f}".format(product.price)}}</td>
+                                          <td> <input type="number" name="quantity" min="1" max="{{product.quantities}}"
+                                                      value="{{product.quantity}}" onchange="this.form.submit()"> </td>
+                                          <td>Rp {{"{:,.2f}".format(subtotal)}}</td>
+                                          {% if product.discount > 0 %}
+                                          <td>{{product.discount}}%</td>
+                                          {% else %}
+                                          <td></td>
+                                          {% endif %}
+                                          <td>Rp {{"{:,.2f}".format(subtotal - discount|round(1,'floor')) }}</td>
+                                          <!-- <td><button type="submit" class="btn btn-sm btn-info">Update</button> </td> -->
+                                    </form>
                                     <td><a href="">Remove</a></td>
                               </tr>
                               {% endfor %}
-                              <tr>
-                                    <td></td>
-                                    <td><a href="/">Continue shopping</a></td>
-                                    <td colspan="4"></td>
-                                    <td colspan="4"><b>Grand total: Rp {{grandtotal}}</b></td>
-                              </tr>
                         </tbody>
+                  </table>
+                  <table class="table table-sm">
+                        <tr>
+                              <td></td>
+                              <td><a href="/">Continue shopping</a></td>
+                              <td width="43%"></td>
+                              <td><b>Grand total: Rp {{grandtotal}}</b></td>
+                        </tr>
                   </table>
             </div>
       </div>

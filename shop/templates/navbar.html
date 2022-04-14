@@ -42,11 +42,13 @@
                               <a class="nav-link disabled" href="{{url_for('getCart')}}" tabindex="-1">Cart ({{session['Shoppingcart']|length}})</a>
                         </li>
                   </ul>
+                  {% if not grandtotal and not product %}
                   <form class="form-inline my-2 my-lg-0" method="POST" id="sch">
                         <input class="form-control mr-sm-2" type="search" placeholder="Search product name"
                               aria-label="Search" size="30" name="searchInput" id="search-bar" value="{{q}}"
                               autofocus="" onfocus="this.setSelectionRange(this.value.length,this.value.length);">
                   </form>
+                  {% endif %}
             </div>
       </nav>
 </div>
