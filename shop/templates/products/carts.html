@@ -52,7 +52,7 @@
                                           <td>Rp {{"{:,.2f}".format(subtotal - discount|round(1,'floor')) }}</td>
                                           <!-- <td><button type="submit" class="btn btn-sm btn-info">Update</button> </td> -->
                                     </form>
-                                    <td><a href="">Remove</a></td>
+                                    <td> <a href="{{url_for('deleteitem', id=key)}}" class="btn btn-sm btn-danger">Delete</a></td>
                               </tr>
                               {% endfor %}
                         </tbody>
@@ -63,6 +63,7 @@
                               <td><a href="/">Continue shopping</a></td>
                               <td width="43%"></td>
                               <td><b>Grand total: Rp {{grandtotal}}</b></td>
+                              <td> <a href="{{url_for('clearcart')}}" class="btn btn-danger btn-sm float-right mr-4"> Clear cart</a> </td>
                         </tr>
                   </table>
             </div>

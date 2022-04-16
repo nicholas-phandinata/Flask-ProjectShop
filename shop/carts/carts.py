@@ -1,6 +1,7 @@
 from crypt import methods
 from flask import redirect, render_template, url_for, flash, request, session, current_app
 from shop import app, mysql
+from shop.products.routes import displayBrands, displayCategories
 
 def MergeDicts(dict1,dict2):
     if isinstance(dict1, list) and isinstance(dict2,list):
@@ -25,10 +26,8 @@ def AddCart():
               DictItems = {product_id:{'name':product[1],'price':product[2],
               'discount':product[3],'color':color,'quantity':quantity,'image':product[10], 
               'colors':product[5], 'quantities':product[4]}}
-              print(DictItems)
 
               if 'Shoppingcart' in session:
-                    print(session['Shoppingcart'])
                     if product_id in session['Shoppingcart']:
                           print("This product is already in your cart")
                     else:
@@ -46,8 +45,8 @@ def AddCart():
 
 @app.route('/carts')
 def getCart():
-    if 'Shoppingcart' not in session:
-        return redirect(request.referrer)
+    if 'Shoppingcart' not in session or len(session['Shoppingcart']) <= 0:
+        return redirect(url_for('home'))
     subtotal = 0
     for key, product in session['Shoppingcart'].items():
         discount = (product['discount']/100) * float(product['price'])
@@ -55,14 +54,7 @@ def getCart():
         subtotal -= discount
     grandtotal = "{:,.2f}".format(subtotal)
 
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
-    displayBrands = cur.fetchall()
-
-    cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
-    displayCategories = cur.fetchall()
-
-    return render_template('products/carts.html', grandtotal=grandtotal, displayBrands=displayBrands, displayCategories=displayCategories)
+    return render_template('products/carts.html', grandtotal=grandtotal, displayBrands=displayBrands(), displayCategories=displayCategories())
 
 @app.route('/updatecart/<int:code>', methods=['POST'])
 def UpdateCart(code):
@@ -82,6 +74,20 @@ def UpdateCart(code):
             print(e)
             return redirect(url_for('getCart'))
 
+@app.route('/deleteitem/<int:id>')
+def deleteitem(id):
+    if 'Shoppingcart' not in session or len(session['Shoppingcart']) <= 0:
+        return redirect(url_for('home'))
+    try:
+        session.modified = True
+        for key , item in session['Shoppingcart'].items():
+            if int(key) == id:
+                session['Shoppingcart'].pop(key, None)
+                return redirect(url_for('getCart'))
+    except Exception as e:
+        print(e)
+        return redirect(url_for('getCart'))
+        
 @app.route('/clearcart')
 def clearcart():
     try:

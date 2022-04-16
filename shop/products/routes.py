@@ -3,8 +3,21 @@ from flask import redirect, render_template, url_for, flash, request, session, c
 from shop import app, mysql, photos
 from .forms import Addproducts
 import secrets, os, math
+
 min_threshold = 1
 max_threshold = 7
+
+def displayBrands():
+      cur = mysql.connection.cursor()
+      cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
+      displayBrands = cur.fetchall()
+      return displayBrands
+
+def displayCategories():
+      cur = mysql.connection.cursor()
+      cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
+      displayCategories = cur.fetchall()
+      return displayCategories
 
 @app.route('/', defaults={'page':1}, methods=['GET', 'POST'])
 @app.route('/page/<int:page>', methods=['GET', 'POST'])
@@ -54,31 +67,17 @@ def home(page):
 
             if not displayProducts:
                   searchNotFound = "snf"
-                  cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
-                  displayBrands = cur.fetchall()
-
-                  cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
-                  displayCategories = cur.fetchall()
-                  return render_template('products/index.html', searchNotFound=searchNotFound, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
+                  return render_template('products/index.html', searchNotFound=searchNotFound, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
+            
             for i, x in enumerate(displayProducts):
                   displayProducts[i] = list(displayProducts[i])
                   rupiah = "{:,.2f}".format(x[2])
                   displayProducts[i][2] = rupiah
 
-            cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
-            displayBrands = cur.fetchall()
-
-            cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
-            displayCategories = cur.fetchall()
             searchFound = "sf"
-            return render_template('products/index.html', searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
+            return render_template('products/index.html', searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
       
-      cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
-      displayBrands = cur.fetchall()
-
-      cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
-      displayCategories = cur.fetchall()
-      return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands, displayCategories=displayCategories, total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
+      return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands(), displayCategories=displayCategories(), total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
 
 @app.route('/product/<int:id>')
 def single_page(id):
@@ -88,13 +87,7 @@ def single_page(id):
       rupiah = "{:,.2f}".format(product[2])
       product[2] = rupiah
 
-      cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
-      displayBrands = cur.fetchall()
-
-      cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
-      displayCategories = cur.fetchall()
-
-      return render_template('products/single_page.html', product=product, displayBrands=displayBrands, displayCategories=displayCategories)
+      return render_template('products/single_page.html', product=product, displayBrands=displayBrands(), displayCategories=displayCategories())
 
 @app.route('/brand/<int:id>', methods=['GET', 'POST'])
 def get_brand(id):
@@ -141,32 +134,20 @@ def get_brand(id):
             qs = "%" + q + "%"
             cur.execute("SELECT * FROM Products WHERE Brand_Id = %s AND Name LIKE %s", (id, qs))
             displayProducts =  list(cur.fetchall())
+            
             if not displayProducts:
                   searchNotFound = "sn"
-                  cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
-                  displayBrands = cur.fetchall()
-
-                  cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
-                  displayCategories = cur.fetchall()
-                  return render_template('products/index.html', searchNotFound=searchNotFound, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
+                  return render_template('products/index.html', searchNotFound=searchNotFound, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
+            
             for i, x in enumerate(displayProducts):
                   displayProducts[i] = list(displayProducts[i])
                   rupiah = "{:,.2f}".format(x[2])
                   displayProducts[i][2] = rupiah
-            cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
-            displayBrands = cur.fetchall()
 
-            cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
-            displayCategories = cur.fetchall()
             searchFound = "sf"
-            return render_template('products/index.html', searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
+            return render_template('products/index.html', searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
 
-      cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
-      displayBrands = cur.fetchall()
-
-      cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
-      displayCategories = cur.fetchall()
-      return render_template('products/index.html', id=id, displayProductsByBrand=displayProductsByBrand, displayBrands=displayBrands, displayCategories=displayCategories, total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
+      return render_template('products/index.html', id=id, displayProductsByBrand=displayProductsByBrand, displayBrands=displayBrands(), displayCategories=displayCategories(), total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
 
 @app.route('/category/<int:id>', methods=['GET', 'POST'])
 def get_category(id):
@@ -215,28 +196,17 @@ def get_category(id):
             displayProducts =  list(cur.fetchall())
             if not displayProducts:
                   searchNotFound = "sn"
-                  cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
-                  displayBrands = cur.fetchall()
-
-                  cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
-                  displayCategories = cur.fetchall()
-                  return render_template('products/index.html', searchNotFound=searchNotFound, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
+                  return render_template('products/index.html', searchNotFound=searchNotFound, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
+            
             for i, x in enumerate(displayProducts):
                   displayProducts[i] = list(displayProducts[i])
                   rupiah = "{:,.2f}".format(x[2])
                   displayProducts[i][2] = rupiah
-            cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
-            displayBrands = cur.fetchall()
-            cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
-            displayCategories = cur.fetchall()
+            
             searchFound = "sf"
-            return render_template('products/index.html', searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands, displayCategories=displayCategories, q=q)
+            return render_template('products/index.html', searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
 
-      cur.execute("SELECT DISTINCT(P.Brand_Id) Brand_Id, B.Name FROM Products P JOIN Brands B ON P.Brand_Id = B.Brand_Id")
-      displayBrands = cur.fetchall()
-      cur.execute("SELECT DISTINCT(P.Cat_Id) Cat_Id, C.Name FROM Products P JOIN Categories C ON P.Cat_Id = C.Cat_Id")
-      displayCategories = cur.fetchall()
-      return render_template('products/index.html', id=id, displayProductsByCategory=displayProductsByCategory, displayBrands=displayBrands, displayCategories=displayCategories, total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
+      return render_template('products/index.html', id=id, displayProductsByCategory=displayProductsByCategory, displayBrands=displayBrands(), displayCategories=displayCategories(), total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
 
 @app.route('/addbrand', methods=['GET', 'POST'])
 def addbrand():
