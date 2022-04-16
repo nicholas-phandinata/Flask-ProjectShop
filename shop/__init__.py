@@ -1,3 +1,4 @@
+import imp
 from flask import Flask
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
@@ -37,3 +38,4 @@ bcrypt = Bcrypt(app)
 from shop.admin import routes
 from shop.products import routes
 from shop.carts import carts
+from shop.customers import routes

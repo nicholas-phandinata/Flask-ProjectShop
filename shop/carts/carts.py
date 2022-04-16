@@ -29,7 +29,10 @@ def AddCart():
 
               if 'Shoppingcart' in session:
                     if product_id in session['Shoppingcart']:
-                          print("This product is already in your cart")
+                        for key, item in session['Shoppingcart'].items():
+                            if int(key) == int(product_id):
+                                session.modified = True
+                                item['quantity'] = item['quantity'] + quantity
                     else:
                           session['Shoppingcart'] = MergeDicts(session['Shoppingcart'], DictItems)
                           return redirect(request.referrer)
