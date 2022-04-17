@@ -22,6 +22,11 @@ def displayCategories():
 @app.route('/', defaults={'page':1}, methods=['GET', 'POST'])
 @app.route('/page/<int:page>', methods=['GET', 'POST'])
 def home(page):
+      customer = None
+
+      if 'customer' in session:
+        customer = session["customer"]
+
       limit = 6
       offset = page*limit - limit
 
@@ -67,7 +72,7 @@ def home(page):
 
             if not displayProducts:
                   searchNotFound = "snf"
-                  return render_template('products/index.html', searchNotFound=searchNotFound, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
+                  return render_template('products/index.html', customer=customer, searchNotFound=searchNotFound, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
             
             for i, x in enumerate(displayProducts):
                   displayProducts[i] = list(displayProducts[i])
@@ -75,22 +80,32 @@ def home(page):
                   displayProducts[i][2] = rupiah
 
             searchFound = "sf"
-            return render_template('products/index.html', searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
-      
-      return render_template('products/index.html', displayProducts=displayProducts, displayBrands=displayBrands(), displayCategories=displayCategories(), total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
+            return render_template('products/index.html', customer=customer, searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
+
+      return render_template('products/index.html', customer=customer, displayProducts=displayProducts, displayBrands=displayBrands(), displayCategories=displayCategories(), total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
 
 @app.route('/product/<int:id>')
 def single_page(id):
+      customer = None
+
+      if 'customer' in session:
+        customer = session["customer"]
+
       cur = mysql.connection.cursor()
       cur.execute("SELECT * FROM Products WHERE Product_Id = %s", [id])
       product = list(cur.fetchone())
       rupiah = "{:,.2f}".format(product[2])
       product[2] = rupiah
 
-      return render_template('products/single_page.html', product=product, displayBrands=displayBrands(), displayCategories=displayCategories())
+      return render_template('products/single_page.html', customer=customer, product=product, displayBrands=displayBrands(), displayCategories=displayCategories())
 
 @app.route('/brand/<int:id>', methods=['GET', 'POST'])
 def get_brand(id):
+      customer = None
+
+      if 'customer' in session:
+        customer = session["customer"]
+
       page = request.args.get('page', 1, type=int)
       limit = 6
       offset = page*limit - limit
@@ -137,7 +152,7 @@ def get_brand(id):
             
             if not displayProducts:
                   searchNotFound = "sn"
-                  return render_template('products/index.html', searchNotFound=searchNotFound, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
+                  return render_template('products/index.html', customer=customer, searchNotFound=searchNotFound, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
             
             for i, x in enumerate(displayProducts):
                   displayProducts[i] = list(displayProducts[i])
@@ -145,12 +160,17 @@ def get_brand(id):
                   displayProducts[i][2] = rupiah
 
             searchFound = "sf"
-            return render_template('products/index.html', searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
+            return render_template('products/index.html', customer=customer, searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
 
-      return render_template('products/index.html', id=id, displayProductsByBrand=displayProductsByBrand, displayBrands=displayBrands(), displayCategories=displayCategories(), total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
+      return render_template('products/index.html', customer=customer, id=id, displayProductsByBrand=displayProductsByBrand, displayBrands=displayBrands(), displayCategories=displayCategories(), total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
 
 @app.route('/category/<int:id>', methods=['GET', 'POST'])
 def get_category(id):
+      customer = None
+
+      if 'customer' in session:
+        customer = session["customer"]
+
       page = request.args.get('page', 1, type=int)
       limit = 6
       offset = page*limit - limit
@@ -196,7 +216,7 @@ def get_category(id):
             displayProducts =  list(cur.fetchall())
             if not displayProducts:
                   searchNotFound = "sn"
-                  return render_template('products/index.html', searchNotFound=searchNotFound, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
+                  return render_template('products/index.html', customer=customer, searchNotFound=searchNotFound, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
             
             for i, x in enumerate(displayProducts):
                   displayProducts[i] = list(displayProducts[i])
@@ -204,9 +224,9 @@ def get_category(id):
                   displayProducts[i][2] = rupiah
             
             searchFound = "sf"
-            return render_template('products/index.html', searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
+            return render_template('products/index.html', customer=customer, searchFound=searchFound, displayProducts=displayProducts, displayBrands=displayBrands(), displayCategories=displayCategories(), q=q)
 
-      return render_template('products/index.html', id=id, displayProductsByCategory=displayProductsByCategory, displayBrands=displayBrands(), displayCategories=displayCategories(), total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
+      return render_template('products/index.html', customer=customer, id=id, displayProductsByCategory=displayProductsByCategory, displayBrands=displayBrands(), displayCategories=displayCategories(), total_page=total_page, next_page=next_page, prev_page=prev_page, current_page=current_page, max_threshold=max_threshold, min_threshold=min_threshold)
 
 @app.route('/addbrand', methods=['GET', 'POST'])
 def addbrand():

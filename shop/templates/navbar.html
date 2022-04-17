@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="/">Home</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -42,6 +42,8 @@
                               <a class="nav-link disabled" href="{{url_for('getCart')}}" tabindex="-1">Cart ({{session['Shoppingcart']|length}})</a>
                         </li>
                   </ul>
+                  <ul class="navbar-nav navbar-right">
+                  <li class="nav-item">
                   {% if not grandtotal and not product %}
                   <form class="form-inline my-2 my-lg-0" method="POST" id="sch">
                         <input class="form-control mr-sm-2" type="search" placeholder="Search product name"
@@ -49,6 +51,28 @@
                               autofocus="" onfocus="this.setSelectionRange(this.value.length,this.value.length);">
                   </form>
                   {% endif %}
+                  </li>
+                  <li class="nav-item dropdown">
+                        {% if customer is none %}
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">Not logged in</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <!--								<li><a class="dropdown-item" href="#" >Profile</a></li>
+                                    <li><a class="dropdown-item" href="#">Settings</a></li>-->
+                              <li><a class="dropdown-item" href="{{url_for('customerLogin')}}">Login</a></li>
+                              <li><a class="dropdown-item" href="{{url_for('customer_register')}}">Register</a></li>
+                        </ul>
+                        {% elif customer is not none %}
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">Logged in as {{customer}}</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <!--								<li><a class="dropdown-item" href="#" >Profile</a></li>
+                                    <li><a class="dropdown-item" href="#">Settings</a></li>-->
+                              <li><a class="dropdown-item" href="{{url_for('customerLogout')}}">Logout</a></li>
+                        </ul>
+                        {% endif %}
+                  </li>
+                  </ul>
             </div>
       </nav>
 </div>

@@ -48,6 +48,11 @@ def AddCart():
 
 @app.route('/carts')
 def getCart():
+    customer = None
+
+    if 'customer' in session:
+        customer = session["customer"]
+
     if 'Shoppingcart' not in session or len(session['Shoppingcart']) <= 0:
         return redirect(url_for('home'))
     subtotal = 0
@@ -57,7 +62,7 @@ def getCart():
         subtotal -= discount
     grandtotal = "{:,.2f}".format(subtotal)
 
-    return render_template('products/carts.html', grandtotal=grandtotal, displayBrands=displayBrands(), displayCategories=displayCategories())
+    return render_template('products/carts.html', customer=customer, grandtotal=grandtotal, displayBrands=displayBrands(), displayCategories=displayCategories())
 
 @app.route('/updatecart/<int:code>', methods=['POST'])
 def UpdateCart(code):
