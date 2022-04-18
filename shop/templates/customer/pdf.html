@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css', _external=True)}}">
+      <title>Get pdf</title>
+</head>
+
+<body>
+      <div class="container mt-4">
+            <div class="row">
+                  <div class="col-md-12">
+                        <b style="float: right;">Invoice: {{get_orders[1]}} </b> 
+                        <br>
+                        Customer name: {{customer_info[1]}}
+                        <br>
+                        Customer email: {{customer_info[3]}}
+                        <br>
+                        Customer contact: {{customer_info[5]}}
+                        <br>
+                        Customer address: {{customer_info[4]}}
+                        <br>
+                        <table class="table table-sm">
+                              <thead>
+                                    <th>Sr</th>
+                                    <th>Name</th>
+                                    <th>Color</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Subtotal</th>
+                                    <th>Discount</th>
+                                    <th>Total</th>
+                              </thead>
+                              <tbody>
+                                    {% for key, product in orders.items() %}
+                                    {% set discount = (product.discount/100) * product.price|float %}
+                                    {% set subtotal = product.quantity|int * product.price|float %}
+                                    <tr>
+                                          <td>{{loop.index}}</td>
+                                          <td>{{product.name}}</td>
+                                          <td>{{product.color}}</td>
+                                          <td>Rp {{"{:,.2f}".format(product.price)}}</td>
+                                          <td>{{product.quantity}}</td>
+                                          <td>Rp {{"{:,.2f}".format(subtotal)}}</td>
+                                          {% if product.discount %}
+                                          <td>{{product.discount}}%</td>
+                                          {% else %}
+                                          <td></td>
+                                          {% endif %}
+                                          <td>Rp {{"{:,.2f}".format(subtotal - discount|round(1,'floor')) }}</td>
+                                    </tr>
+                                    {% endfor %}
+                              </tbody>
+                        </table>
+                        <table class="table table-sm">
+                              <tr>
+                                    <td width="35%"></td>
+                                    <td>
+                                          <h5>Grand total: Rp {{grandtotal}}</h3>
+                                    </td>
+                              </tr>
+                        </table>
+                  </div>
+            </div>
+      </div>
+</body>
+
+</html>

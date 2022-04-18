@@ -41,6 +41,14 @@
                         <li class="nav-item">
                               <a class="nav-link disabled" href="{{url_for('getCart')}}" tabindex="-1">Cart ({{session['Shoppingcart']|length}})</a>
                         </li>
+
+                        {% if customer is none %}
+                        <li></li>
+                        {% elif customer is not none %}
+                        <li class="nav-item">
+                              <a class="nav-link" href="{{url_for('orders')}}" tabindex="-1">Order</a>
+                        </li>
+                        {% endif %}
                   </ul>
                   <ul class="navbar-nav navbar-right">
                   <li class="nav-item">

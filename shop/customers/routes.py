@@ -1,8 +1,12 @@
 from flask import render_template, session, request, redirect, url_for, flash, current_app, make_response
+from matplotlib.font_manager import json_dump
 from shop import app, mysql, photos, bcrypt
 from .forms import CustomerRegisterForm, CustomerLoginFrom
 import secrets
 import os
+import ast
+import json
+import pdfkit
 
 @app.route('/customer/register', methods=['GET','POST'])
 def customer_register():
@@ -73,37 +77,47 @@ def get_order():
         invoice = secrets.token_hex(5)
         try:
             sql_query = "INSERT INTO Customer_Orders (Invoice, Customer_ID, Orders) VALUES (%s, %s, %s)"
-            values = (invoice, session["customer_id"], session['Shoppingcart'])
+            orders = json.dumps(session['Shoppingcart'])
+            values = (invoice, session["customer_id"], orders)
             cur.execute(sql_query, values)
             mysql.connection.commit()
             cur.close()
             session.pop('Shoppingcart')
             flash('Your order has been sent successfully','success')
-            return redirect(url_for('home'))
+            return redirect(url_for('orders'))
         except Exception as e:
             print(e)
             flash('Some thing went wrong while get order', 'danger')
             return redirect(url_for('getCart'))
-    elif 'customer' not in session:
-        return redirect(url_for('customerLogin'))
-
-@app.route('/orders/<invoice>')
-def orders(invoice):
-    if 'customer' in session:
-        grandTotal = 0
-        subTotal = 0
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT Customer_ID FROM Customers WHERE Email = %s", [session["customer"]])
-        get_customer_id = cur.fetchone()
-        # customer = Register.query.filter_by(id=customer_id).first()
-        # orders = CustomerOrder.query.filter_by(customer_id=customer_id, invoice=invoice).order_by(CustomerOrder.id.desc()).first()
-        for _key, product in orders.orders.items():
-            discount = (product['discount']/100) * float(product['price'])
-            subTotal += float(product['price']) * int(product['quantity'])
-            subTotal -= discount
-            tax = ("%.2f" % (.06 * float(subTotal)))
-            grandTotal = ("%.2f" % (1.06 * float(subTotal)))
-
     else:
         return redirect(url_for('customerLogin'))
-    return render_template('customer/order.html', invoice=invoice, tax=tax,subTotal=subTotal,grandTotal=grandTotal,orders=orders)
+
+@app.route('/orders', methods=['GET','POST'])
+def orders():
+    if 'customer' in session:
+        customer = session["customer"]
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT Customer_ID, Name, Username, Email, Address, Contact FROM Customers WHERE Email = %s", [session["customer"]])
+        customer_info = cur.fetchone()
+        cur.execute("SELECT * FROM Customer_Orders WHERE Customer_ID = %s AND Payment_Status = 'Pending'", [session["customer_id"]])
+        get_orders = cur.fetchone()
+        extract_orders = get_orders[5]
+        orders = ast.literal_eval(extract_orders)
+        subtotal = 0
+        for key, product in orders.items():
+            discount = (product['discount']/100) * float(product['price'])
+            subtotal += float(product['price']) * int(product['quantity'])
+            subtotal -= discount
+        grandtotal = "{:,.2f}".format(subtotal)
+
+        if request.method =="POST":
+            rendered =  render_template('customer/pdf.html', grandtotal=grandtotal, customer_info=customer_info, get_orders=get_orders, orders=orders)
+            pdf = pdfkit.from_string(rendered, False)
+            response = make_response(pdf)
+            response.headers['content-Type'] ='application/pdf'
+            response.headers['content-Disposition'] ='atteched; filename=' + get_orders[1] + '.pdf'
+            return response
+
+        return render_template('customer/order.html', customer=customer, grandtotal=grandtotal, customer_info=customer_info, get_orders=get_orders, orders=orders)
+    else:
+        return redirect(url_for('customerLogin'))
